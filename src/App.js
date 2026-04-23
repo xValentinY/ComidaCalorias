@@ -7,7 +7,6 @@ import { analyzeFood } from "./services/analyzeFood";
 const App = () => {
   const [view, setView] = useState("camera");
   const [preview, setPreview] = useState(null);
-  const [imageBase64, setImageBase64] = useState(null);
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -19,7 +18,6 @@ const App = () => {
   }, []);
 
   const handleCapture = (base64, imagePreview) => {
-    setImageBase64(base64);
     setPreview(imagePreview);
     setView("preview");
   };
@@ -98,7 +96,6 @@ const App = () => {
 
   const handleRetry = () => {
     setPreview(null);
-    setImageBase64(null);
     setResult(null);
     setView("camera");
   };
