@@ -8,7 +8,9 @@ const Camera = ({ onCapture }) => {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: { ideal: "environment" } } 
+      });
       videoRef.current.srcObject = stream;
       setStreaming(true);
       setError(null);
