@@ -9,28 +9,36 @@ export const analyzeFood = async (imageBase64) => {
       contents: [{
         parts: [
           {
-            inline_data: {
-              mime_type: "image/jpeg",
-              data: imageBase64
-            }
+            text: `Analiza esta imagen. Si hay un alimento responde SOLO esto sin nada más:
+{"alimento":"nombre","calorias":número,"encontrado":true}
+Si no hay alimento responde SOLO esto:
+{"alimento":"No identificado","calorias":0,"encontrado":false}`
           },
           {
-            text: `Analiza esta imagen e identifica si hay alimentos. 
-            Responde ÚNICAMENTE en este formato JSON exacto, sin texto extra:
-            {
-              "alimento": "nombre del alimento principal",
-              "calorias": número estimado de kcal,
-              "encontrado": true o false
+            inlineData: {
+              mimeType: "image/jpeg",
+              data: imageBase64
             }
-            Si no hay alimento, pon encontrado: false y alimento: "No identificado" y calorias: 0`
           }
         ]
       }]
     })
   });
 
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.log(errorText); // 👈 DEBUG
+    throw new Error("Error en la API");
+  }
+
   const data = await response.json();
-  const text = data.candidates[0].content.parts[0].text;
-  const clean = text.replace(/```json|```/g, "").trim();
-  return JSON.parse(clean);
+
+  console.log(data); // 👈 DEBUG
+
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  const match = text?.match(/\{.*\}/s);
+  if (!match) throw new Error("Respuesta inválida");
+
+  return JSON.parse(match[0]);
 };
