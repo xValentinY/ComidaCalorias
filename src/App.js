@@ -48,7 +48,6 @@ const App = () => {
     setLoading(false);
   };
 
-  // 🔥 COMPRESIÓN DE IMAGEN
   const resizeImage = (base64, maxWidth = 200) => {
     return new Promise((resolve) => {
       const img = new Image();
@@ -69,7 +68,6 @@ const App = () => {
     });
   };
 
-  // 🔥 GUARDADO CORREGIDO
   const handleSave = async () => {
     try {
       const imagenReducida = await resizeImage(result.imagen);
@@ -80,12 +78,9 @@ const App = () => {
       };
 
       let updated = [nuevo, ...history];
-
-      // 👇 límite de 15
       updated = updated.slice(0, 15);
 
       setHistory(updated);
-
       localStorage.setItem("historial", JSON.stringify(updated));
 
       setView("history");
@@ -110,103 +105,143 @@ const App = () => {
 
   return (
     <div style={appStyle}>
-      <h1 style={{ textAlign: "center", color: "#4CAF50" }}>
-        FotoCalorías
-      </h1>
+      <div style={containerStyle}>
+        
+        <h1 style={titleStyle}>FotoCalorías 📸</h1>
 
-      <div style={navStyle}>
-        <button onClick={() => setView("camera")} style={navBtn}>
-          Cámara
-        </button>
-        <button onClick={() => setView("history")} style={navBtn}>
-          Historial
-        </button>
-      </div>
+        <p style={subtitleStyle}>
+          Toma o sube una foto de un alimento para estimar sus calorías
+        </p>
 
-      {view === "camera" && <Camera onCapture={handleCapture} />}
-
-      {view === "preview" && (
-        <div style={{ textAlign: "center" }}>
-          <img
-            src={preview}
-            alt="Vista previa"
-            style={{ width: "100%", maxWidth: 300, borderRadius: 12 }}
-          />
-
-          <p>¿Se ve bien la foto?</p>
-
-          {error && <p style={{ color: "red" }}>{error}</p>}
-
-          {loading ? (
-            <p style={{ color: "#2196F3" }}>Analizando imagen...</p>
-          ) : (
-            <>
-              <button
-                onClick={handleAnalyze}
-                style={{ ...btnStyle, backgroundColor: "#4CAF50" }}
-              >
-                Analizar
-              </button>
-
-              <button
-                onClick={handleRetry}
-                style={{
-                  ...btnStyle,
-                  backgroundColor: "#9E9E9E",
-                  marginLeft: 8
-                }}
-              >
-                Repetir
-              </button>
-            </>
-          )}
+        <div style={navStyle}>
+          <button onClick={() => setView("camera")} style={navBtn}>
+            Cámara
+          </button>
+          <button onClick={() => setView("history")} style={navBtn}>
+            Historial
+          </button>
         </div>
-      )}
 
-      {view === "result" && result && (
-        <Result
-          result={result}
-          onSave={handleSave}
-          onRetry={handleRetry}
-        />
-      )}
+        {view === "camera" && <Camera onCapture={handleCapture} />}
 
-      {view === "history" && (
-        <History history={history} onDelete={handleDelete} />
-      )}
+        {view === "preview" && (
+          <div>
+            <img
+              src={preview}
+              alt="Vista previa"
+              style={imageStyle}
+            />
+
+            <p style={{ fontSize: 14 }}>¿Se ve bien la foto?</p>
+
+            {error && <p style={{ color: "red" }}>{error}</p>}
+
+            {loading ? (
+              <p style={{ color: "#2196F3" }}>Analizando imagen...</p>
+            ) : (
+              <>
+                <button onClick={handleAnalyze} style={btnPrimary}>
+                  Analizar
+                </button>
+
+                <button onClick={handleRetry} style={btnSecondary}>
+                  Repetir
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {view === "result" && result && (
+          <Result
+            result={result}
+            onSave={handleSave}
+            onRetry={handleRetry}
+          />
+        )}
+
+        {view === "history" && (
+          <History history={history} onDelete={handleDelete} />
+        )}
+      </div>
     </div>
   );
 };
 
+/* 🎨 ESTILOS */
+
 const appStyle = {
-  maxWidth: 480,
-  margin: "0 auto",
-  padding: 20,
+  minHeight: "100vh",
+  background: "#f5f7fa",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
   fontFamily: "sans-serif"
+};
+
+const containerStyle = {
+  width: "100%",
+  maxWidth: 380,
+  background: "white",
+  padding: 20,
+  borderRadius: 16,
+  boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+  textAlign: "center"
+};
+
+const titleStyle = {
+  color: "#4CAF50",
+  marginBottom: 10
+};
+
+const subtitleStyle = {
+  fontSize: 14,
+  color: "#666",
+  marginBottom: 20
 };
 
 const navStyle = {
   display: "flex",
-  justifyContent: "center",
-  gap: 12,
+  gap: 10,
   marginBottom: 20
 };
 
 const navBtn = {
-  padding: "10px 20px",
-  fontSize: 15,
+  flex: 1,
+  padding: "10px",
+  fontSize: 14,
   borderRadius: 8,
   border: "none",
-  backgroundColor: "#e0e0e0",
+  backgroundColor: "#eeeeee",
   cursor: "pointer"
 };
 
-const btnStyle = {
+const imageStyle = {
+  width: "100%",
+  borderRadius: 12,
+  marginBottom: 10
+};
+
+const btnPrimary = {
   marginTop: 12,
-  padding: "12px 24px",
+  padding: "12px",
+  width: "100%",
   fontSize: 16,
-  borderRadius: 8,
+  borderRadius: 10,
   border: "none",
+  backgroundColor: "#4CAF50",
+  color: "white",
+  cursor: "pointer"
+};
+
+const btnSecondary = {
+  marginTop: 8,
+  padding: "12px",
+  width: "100%",
+  fontSize: 15,
+  borderRadius: 10,
+  border: "none",
+  backgroundColor: "#9E9E9E",
   color: "white",
   cursor: "pointer"
 };

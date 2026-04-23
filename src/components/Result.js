@@ -3,74 +3,107 @@ import React from "react";
 const Result = ({ result, onSave, onRetry }) => {
   return (
     <div style={containerStyle}>
+      
       <img src={result.imagen} alt="Alimento" style={imgStyle} />
-      <h2>🍽️ Resultado del análisis</h2>
+
+      <h2 style={titleStyle}>Resultado del análisis</h2>
 
       {result.encontrado ? (
-        <>
-          <p>
-            <strong>Calorías estimadas:</strong> {result.calorias} kcal
-          </p>
-
-          {result.confianza > 0.6 && (
-            <p>
-              <strong>Alimento:</strong> {result.nombre}
-            </p>
-          )}
-        </>
+        <div style={resultBox}>
+          <p style={foodStyle}>🍽️ {result.nombre}</p>
+          <p style={caloriesStyle}>🔥 {result.calorias} kcal</p>
+        </div>
       ) : (
-        <p style={{ color: "orange" }}>
-          ⚠️ No se pudo identificar ningún alimento en la imagen.
+        <p style={warningStyle}>
+          ⚠️ No se pudo identificar el alimento
         </p>
       )}
 
-      <p><strong>Fecha:</strong> {result.fecha}</p>
-      <p><strong>Hora:</strong> {result.hora}</p>
-
-      <div style={{ marginTop: 16 }}>
-        <button
-          onClick={onSave}
-          style={{ ...btnStyle, backgroundColor: "#2196F3" }}
-        >
-          💾 Guardar en historial
-        </button>
-
-        <button
-          onClick={onRetry}
-          style={{
-            ...btnStyle,
-            backgroundColor: "#9E9E9E",
-            marginLeft: 8
-          }}
-        >
-          🔄 Tomar otra foto
-        </button>
+      <div style={dateBox}>
+        <p>📅 {result.fecha}</p>
+        <p>🕒 {result.hora}</p>
       </div>
+
+      <button onClick={onSave} style={btnPrimary}>
+        💾 Guardar en historial
+      </button>
+
+      <button onClick={onRetry} style={btnSecondary}>
+        🔄 Tomar otra foto
+      </button>
     </div>
   );
 };
 
+/* 🎨 ESTILOS */
+
 const containerStyle = {
-  textAlign: "center",
-  padding: 20,
-  backgroundColor: "#f9f9f9",
-  borderRadius: 12,
-  marginTop: 20
+  marginTop: 10
 };
 
 const imgStyle = {
   width: "100%",
-  maxWidth: 300,
   borderRadius: 12,
-  marginBottom: 16
+  marginBottom: 15
 };
 
-const btnStyle = {
-  padding: "10px 20px",
-  fontSize: 15,
-  borderRadius: 8,
+const titleStyle = {
+  fontSize: 18,
+  marginBottom: 10,
+  color: "#333"
+};
+
+const resultBox = {
+  background: "#f1f8f4",
+  borderRadius: 12,
+  padding: 12,
+  marginBottom: 12
+};
+
+const foodStyle = {
+  fontSize: 18,
+  fontWeight: "bold",
+  margin: 0
+};
+
+const caloriesStyle = {
+  fontSize: 16,
+  color: "#4CAF50",
+  margin: 0
+};
+
+const warningStyle = {
+  color: "orange",
+  fontSize: 14,
+  marginBottom: 10
+};
+
+const dateBox = {
+  fontSize: 13,
+  color: "#777",
+  marginBottom: 15
+};
+
+const btnPrimary = {
+  width: "100%",
+  padding: "12px",
+  borderRadius: 10,
   border: "none",
+  backgroundColor: "#2196F3",
   color: "white",
+  fontSize: 15,
+  cursor: "pointer",
+  marginBottom: 8
+};
+
+const btnSecondary = {
+  width: "100%",
+  padding: "12px",
+  borderRadius: 10,
+  border: "none",
+  backgroundColor: "#9E9E9E",
+  color: "white",
+  fontSize: 15,
   cursor: "pointer"
 };
 
