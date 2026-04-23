@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Camera from "./components/Camera";
 import Result from "./components/Result";
 import History from "./components/History";
-import { analyzeFood } from "./services/geminiService";
+import { analyzeFood } from "./services/analyzeFood";
 
 const App = () => {
   const [view, setView] = useState("camera");
@@ -28,26 +28,71 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await analyzeFood(imageBase64);
+      const data = await analyzeFood(preview);
       const now = new Date();
+
       setResult({
         ...data,
         imagen: preview,
         fecha: now.toLocaleDateString("es-MX"),
-        hora: now.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" })
+        hora: now.toLocaleTimeString("es-MX", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })
       });
+
       setView("result");
     } catch (err) {
-      setError("Error al analizar la imagen. Intenta de nuevo.");
+      setError("Error al analizar la imagen.");
     }
     setLoading(false);
   };
 
-  const handleSave = () => {
-    const updated = [result, ...history];
-    setHistory(updated);
-    localStorage.setItem("historial", JSON.stringify(updated));
-    setView("history");
+  // 🔥 COMPRESIÓN DE IMAGEN
+  const resizeImage = (base64, maxWidth = 200) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+
+        const scale = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        resolve(canvas.toDataURL("image/jpeg", 0.5));
+      };
+    });
+  };
+
+  // 🔥 GUARDADO CORREGIDO
+  const handleSave = async () => {
+    try {
+      const imagenReducida = await resizeImage(result.imagen);
+
+      const nuevo = {
+        ...result,
+        imagen: imagenReducida
+      };
+
+      let updated = [nuevo, ...history];
+
+      // 👇 límite de 15
+      updated = updated.slice(0, 15);
+
+      setHistory(updated);
+
+      localStorage.setItem("historial", JSON.stringify(updated));
+
+      setView("history");
+    } catch (error) {
+      console.error("Error guardando:", error);
+      alert("No se pudo guardar.");
+    }
   };
 
   const handleDelete = (index) => {
@@ -65,28 +110,53 @@ const App = () => {
 
   return (
     <div style={appStyle}>
-      <h1 style={{ textAlign: "center", color: "#4CAF50" }}>🥗 FotoCalorías</h1>
+      <h1 style={{ textAlign: "center", color: "#4CAF50" }}>
+        FotoCalorías
+      </h1>
+
       <div style={navStyle}>
-        <button onClick={() => setView("camera")} style={navBtn}>📷 Cámara</button>
-        <button onClick={() => setView("history")} style={navBtn}>📋 Historial</button>
+        <button onClick={() => setView("camera")} style={navBtn}>
+          Cámara
+        </button>
+        <button onClick={() => setView("history")} style={navBtn}>
+          Historial
+        </button>
       </div>
 
       {view === "camera" && <Camera onCapture={handleCapture} />}
 
       {view === "preview" && (
         <div style={{ textAlign: "center" }}>
-          <img src={preview} alt="Vista previa" style={{ width: "100%", maxWidth: 300, borderRadius: 12 }} />
+          <img
+            src={preview}
+            alt="Vista previa"
+            style={{ width: "100%", maxWidth: 300, borderRadius: 12 }}
+          />
+
           <p>¿Se ve bien la foto?</p>
+
           {error && <p style={{ color: "red" }}>{error}</p>}
+
           {loading ? (
-            <p style={{ color: "#2196F3" }}>⏳ Analizando imagen...</p>
+            <p style={{ color: "#2196F3" }}>Analizando imagen...</p>
           ) : (
             <>
-              <button onClick={handleAnalyze} style={{ ...btnStyle, backgroundColor: "#4CAF50" }}>
-                🔍 Analizar
+              <button
+                onClick={handleAnalyze}
+                style={{ ...btnStyle, backgroundColor: "#4CAF50" }}
+              >
+                Analizar
               </button>
-              <button onClick={handleRetry} style={{ ...btnStyle, backgroundColor: "#9E9E9E", marginLeft: 8 }}>
-                🔄 Repetir
+
+              <button
+                onClick={handleRetry}
+                style={{
+                  ...btnStyle,
+                  backgroundColor: "#9E9E9E",
+                  marginLeft: 8
+                }}
+              >
+                Repetir
               </button>
             </>
           )}
@@ -94,7 +164,11 @@ const App = () => {
       )}
 
       {view === "result" && result && (
-        <Result result={result} onSave={handleSave} onRetry={handleRetry} />
+        <Result
+          result={result}
+          onSave={handleSave}
+          onRetry={handleRetry}
+        />
       )}
 
       {view === "history" && (
