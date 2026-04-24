@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import Camera from "./components/Camera";
 import Result from "./components/Result";
 import History from "./components/History";
-import { analyzeFood } from "./services/analyzeFood";
+import { analyzeFood } from "./services/geminiService";
 
 const App = () => {
   const [view, setView] = useState("camera");
   const [preview, setPreview] = useState(null);
+  const [imageBase64, setImageBase64] = useState(null);
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,7 @@ const App = () => {
   }, []);
 
   const handleCapture = (base64, imagePreview) => {
+    setImageBase64(base64);
     setPreview(imagePreview);
     setView("preview");
   };
@@ -26,9 +28,8 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await analyzeFood(preview);
+      const data = await analyzeFood(imageBase64);
       const now = new Date();
-
       setResult({
         ...data,
         imagen: preview,
@@ -38,7 +39,6 @@ const App = () => {
           minute: "2-digit"
         })
       });
-
       setView("result");
     } catch (err) {
       setError("Error al analizar la imagen.");
@@ -50,17 +50,13 @@ const App = () => {
     return new Promise((resolve) => {
       const img = new Image();
       img.src = base64;
-
       img.onload = () => {
         const canvas = document.createElement("canvas");
-
         const scale = maxWidth / img.width;
         canvas.width = maxWidth;
         canvas.height = img.height * scale;
-
         const ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
         resolve(canvas.toDataURL("image/jpeg", 0.5));
       };
     });
@@ -69,18 +65,11 @@ const App = () => {
   const handleSave = async () => {
     try {
       const imagenReducida = await resizeImage(result.imagen);
-
-      const nuevo = {
-        ...result,
-        imagen: imagenReducida
-      };
-
+      const nuevo = { ...result, imagen: imagenReducida };
       let updated = [nuevo, ...history];
       updated = updated.slice(0, 15);
-
       setHistory(updated);
       localStorage.setItem("historial", JSON.stringify(updated));
-
       setView("history");
     } catch (error) {
       console.error("Error guardando:", error);
@@ -96,6 +85,7 @@ const App = () => {
 
   const handleRetry = () => {
     setPreview(null);
+    setImageBase64(null);
     setResult(null);
     setView("camera");
   };
@@ -103,58 +93,35 @@ const App = () => {
   return (
     <div style={appStyle}>
       <div style={containerStyle}>
-        
         <h1 style={titleStyle}>FotoCalorías 📸</h1>
-
         <p style={subtitleStyle}>
           Toma o sube una foto de un alimento para estimar sus calorías
         </p>
-
         <div style={navStyle}>
-          <button onClick={() => setView("camera")} style={navBtn}>
-            Cámara
-          </button>
-          <button onClick={() => setView("history")} style={navBtn}>
-            Historial
-          </button>
+          <button onClick={() => setView("camera")} style={navBtn}>Cámara</button>
+          <button onClick={() => setView("history")} style={navBtn}>Historial</button>
         </div>
 
         {view === "camera" && <Camera onCapture={handleCapture} />}
 
         {view === "preview" && (
           <div>
-            <img
-              src={preview}
-              alt="Vista previa"
-              style={imageStyle}
-            />
-
+            <img src={preview} alt="Vista previa" style={imageStyle} />
             <p style={{ fontSize: 14 }}>¿Se ve bien la foto?</p>
-
             {error && <p style={{ color: "red" }}>{error}</p>}
-
             {loading ? (
-              <p style={{ color: "#2196F3" }}>Analizando imagen...</p>
+              <p style={{ color: "#2196F3" }}>⏳ Analizando imagen...</p>
             ) : (
               <>
-                <button onClick={handleAnalyze} style={btnPrimary}>
-                  Analizar
-                </button>
-
-                <button onClick={handleRetry} style={btnSecondary}>
-                  Repetir
-                </button>
+                <button onClick={handleAnalyze} style={btnPrimary}>🔍 Analizar</button>
+                <button onClick={handleRetry} style={btnSecondary}>🔄 Repetir</button>
               </>
             )}
           </div>
         )}
 
         {view === "result" && result && (
-          <Result
-            result={result}
-            onSave={handleSave}
-            onRetry={handleRetry}
-          />
+          <Result result={result} onSave={handleSave} onRetry={handleRetry} />
         )}
 
         {view === "history" && (
@@ -164,8 +131,6 @@ const App = () => {
     </div>
   );
 };
-
-/* 🎨 ESTILOS */
 
 const appStyle = {
   minHeight: "100vh",
@@ -186,61 +151,21 @@ const containerStyle = {
   textAlign: "center"
 };
 
-const titleStyle = {
-  color: "#4CAF50",
-  marginBottom: 10
-};
-
-const subtitleStyle = {
-  fontSize: 14,
-  color: "#666",
-  marginBottom: 20
-};
-
-const navStyle = {
-  display: "flex",
-  gap: 10,
-  marginBottom: 20
-};
-
+const titleStyle = { color: "#4CAF50", marginBottom: 10 };
+const subtitleStyle = { fontSize: 14, color: "#666", marginBottom: 20 };
+const navStyle = { display: "flex", gap: 10, marginBottom: 20 };
 const navBtn = {
-  flex: 1,
-  padding: "10px",
-  fontSize: 14,
-  borderRadius: 8,
-  border: "none",
-  backgroundColor: "#eeeeee",
-  cursor: "pointer"
+  flex: 1, padding: "10px", fontSize: 14,
+  borderRadius: 8, border: "none", backgroundColor: "#eeeeee", cursor: "pointer"
 };
-
-const imageStyle = {
-  width: "100%",
-  borderRadius: 12,
-  marginBottom: 10
-};
-
+const imageStyle = { width: "100%", borderRadius: 12, marginBottom: 10 };
 const btnPrimary = {
-  marginTop: 12,
-  padding: "12px",
-  width: "100%",
-  fontSize: 16,
-  borderRadius: 10,
-  border: "none",
-  backgroundColor: "#4CAF50",
-  color: "white",
-  cursor: "pointer"
+  marginTop: 12, padding: "12px", width: "100%", fontSize: 16,
+  borderRadius: 10, border: "none", backgroundColor: "#4CAF50", color: "white", cursor: "pointer"
 };
-
 const btnSecondary = {
-  marginTop: 8,
-  padding: "12px",
-  width: "100%",
-  fontSize: 15,
-  borderRadius: 10,
-  border: "none",
-  backgroundColor: "#9E9E9E",
-  color: "white",
-  cursor: "pointer"
+  marginTop: 8, padding: "12px", width: "100%", fontSize: 15,
+  borderRadius: 10, border: "none", backgroundColor: "#9E9E9E", color: "white", cursor: "pointer"
 };
 
 export default App;
