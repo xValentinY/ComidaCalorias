@@ -1,5 +1,5 @@
 export const analyzeFood = async (imageBase64) => {
-  const response = await fetch("http://localhost:3001/analyze", {
+  const response = await fetch("https://comidacalorias-production.up.railway.app/analyze", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
