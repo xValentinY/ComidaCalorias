@@ -4,7 +4,6 @@ Aplicación web que permite analizar alimentos a partir de una imagen y estimar 
 
 Para poder utilizarse en celular favor de ingresar a este link:
 https://comida-calorias-ui4i.vercel.app
-
 ## Como funciona
 
 1. El usuario abre la app
