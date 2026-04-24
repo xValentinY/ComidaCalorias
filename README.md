@@ -40,7 +40,7 @@ cd server
 npm install
 
 Variables de entorno - crear archivo /server/.env con:
-OPENAI_API_KEY=tu_clave_de_openai
+OPENAI_API_KEY=clave key
 
 Ejecutar backend (Terminal 1):
 cd server
