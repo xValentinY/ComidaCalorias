@@ -1,87 +1,96 @@
-//FotoCalorias
+# FotoCalorías
 
 Aplicación web que permite analizar alimentos a partir de una imagen y estimar sus calorías de forma rápida y sencilla.
 
-
-//Para poder utilizarse con el celular favor de ingresar a este link
-
+Para poder utilizarse en celular favor de ingresar a este link:
 https://comida-calorias-ui4i.vercel.app
 
-
--- ¿Cómo funciona?
+## Como funciona
 
 1. El usuario abre la app
-2. Puede:
-   - Tomar una foto desde la cámara  
-   - Subir una imagen
-3. La imagen se procesa en la app
-4. Se envía a un servicio de análisis (analyzeFood)
-5. Se obtiene una estimación de calorías
+2. Puede tomar una foto desde la cámara o subir una imagen desde la galería
+3. La imagen se envía al backend en Node.js
+4. El backend la procesa con OpenAI GPT-4 Vision
+5. Se obtiene el nombre del alimento y una estimación de calorías
 6. El resultado se muestra en pantalla
 7. El usuario puede guardar el resultado en el historial
 
--- Tecnologías utilizadas
+## Tecnologías utilizadas
 
 - React (Create React App)
 - JavaScript
-- CSS (inline styles)
-- Vercel (deploy)
-- LocalStorage (para historial)
+- Node.js + Express (backend)
+- OpenAI API GPT-4 Vision (identificación de alimentos)
+- Vercel (deploy frontend)
+- Railway (deploy backend)
+- LocalStorage (historial)
 
--- Instalación local
+## Instalación local
 
-Sigue estos pasos para ejecutar el proyecto en tu computadora:
+Clonar el repositorio:
+git clone https://github.com/xValentinY/ComidaCalorias.git
 
--- Clonar el repositorio: 
+Entrar al proyecto:
+cd ComidaCalorias
 
-git clone https://github.com/xValentinY/ComidaCalorias.git  
+Instalar dependencias del frontend:
+npm install
 
--- Entrar al proyecto 
+Instalar dependencias del backend:
+cd server
+npm install
 
-cd ComidaCalorias  
+Variables de entorno - crear archivo /server/.env con:
+OPENAI_API_KEY=tu_clave_de_openai
 
--- Instalar dependencias 
+Ejecutar backend (Terminal 1):
+cd server
+npm start
 
-npm install 
+Ejecutar frontend (Terminal 2):
+cd ComidaCalorias
+npm start
 
--- Ejecutar en modo desarrollo npm start 
+La app se abrirá en http://localhost:3000
 
-La app se abrirá en:
-http://localhost:3000
+## Uso en celular
 
-
--- Uso en celular
-
-No necesitas instalar nada  
+No necesitas instalar nada.
 Solo abre el link en tu navegador:
-
 https://comida-calorias-ui4i.vercel.app
 
-1. Recomendado: usar Chrome o Safari  
-2. Permitir acceso a la cámara
+Recomendado: usar Chrome o Safari
+Permitir acceso a la cámara cuando se solicite
 
--- Funcionalidades
+## Funcionalidades
 
 - Captura de imagen desde cámara
-- Subida de imágenes
-- Análisis de alimentos
-- Visualización de resultados
-- Historial de consultas (máx. 15)
-- Eliminación de registros
+- Subida de imágenes desde galería
+- Análisis de alimentos con IA
+- Visualización del nombre del alimento y calorías estimadas
+- Historial de consultas con imagen, fecha y hora (máx. 15)
+- Eliminación de registros del historial
 
--- Notas
+## Como funciona la identificación de alimentos
 
-- La estimación de calorías es aproximada
-- Depende del servicio utilizado en analyzeFood
-- Se requiere conexión a internet
+La imagen se convierte a base64 y se envía al backend. El backend la procesa con OpenAI GPT-4 Vision, que identifica el alimento principal y estima sus calorías basándose en una porción estándar. La respuesta llega en formato JSON.
 
--- Autor
+## Limitaciones
 
-Desarrollado por: Valentin Gamboa para cheek food
+- La estimación de calorías es aproximada, no es un valor médico
+- Requiere HTTPS para usar la cámara en dispositivos móviles
+- La API key de OpenAI requiere créditos de pago
+- El historial se almacena localmente y no se sincroniza entre dispositivos
 
--- Futuras mejoras
+## Autor
 
-- Integración con IA real (visión)
+Desarrollado por Valentin Gamboa para Che-Ek
+
+## Mejoras futuras
+
 - Mejoras de UI/UX
 - Modo oscuro
-- Convertir a PWA (instalab
+- Convertir a PWA instalable
+- Sincronización del historial en la nube
+- Identificación de varios alimentos en una misma imagen
+- Gráficas de consumo calórico diario
