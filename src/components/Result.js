@@ -10,7 +10,7 @@ const Result = ({ result, onSave, onRetry }) => {
 
       {result.encontrado ? (
         <div style={resultBox}>
-          <p style={foodStyle}>🍽️ {result.nombre}</p>
+          <p style={foodStyle}>🍽️ {result.alimento}</p>
           <p style={caloriesStyle}>🔥 {result.calorias} kcal</p>
         </div>
       ) : (
@@ -35,76 +35,21 @@ const Result = ({ result, onSave, onRetry }) => {
   );
 };
 
-/* 🎨 ESTILOS */
-
-const containerStyle = {
-  marginTop: 10
-};
-
-const imgStyle = {
-  width: "100%",
-  borderRadius: 12,
-  marginBottom: 15
-};
-
-const titleStyle = {
-  fontSize: 18,
-  marginBottom: 10,
-  color: "#333"
-};
-
-const resultBox = {
-  background: "#f1f8f4",
-  borderRadius: 12,
-  padding: 12,
-  marginBottom: 12
-};
-
-const foodStyle = {
-  fontSize: 18,
-  fontWeight: "bold",
-  margin: 0
-};
-
-const caloriesStyle = {
-  fontSize: 16,
-  color: "#4CAF50",
-  margin: 0
-};
-
-const warningStyle = {
-  color: "orange",
-  fontSize: 14,
-  marginBottom: 10
-};
-
-const dateBox = {
-  fontSize: 13,
-  color: "#777",
-  marginBottom: 15
-};
-
+const containerStyle = { marginTop: 10 };
+const imgStyle = { width: "100%", borderRadius: 12, marginBottom: 15 };
+const titleStyle = { fontSize: 18, marginBottom: 10, color: "#333" };
+const resultBox = { background: "#f1f8f4", borderRadius: 12, padding: 12, marginBottom: 12 };
+const foodStyle = { fontSize: 18, fontWeight: "bold", margin: 0 };
+const caloriesStyle = { fontSize: 16, color: "#4CAF50", margin: 0 };
+const warningStyle = { color: "orange", fontSize: 14, marginBottom: 10 };
+const dateBox = { fontSize: 13, color: "#777", marginBottom: 15 };
 const btnPrimary = {
-  width: "100%",
-  padding: "12px",
-  borderRadius: 10,
-  border: "none",
-  backgroundColor: "#2196F3",
-  color: "white",
-  fontSize: 15,
-  cursor: "pointer",
-  marginBottom: 8
+  width: "100%", padding: "12px", borderRadius: 10, border: "none",
+  backgroundColor: "#2196F3", color: "white", fontSize: 15, cursor: "pointer", marginBottom: 8
 };
-
 const btnSecondary = {
-  width: "100%",
-  padding: "12px",
-  borderRadius: 10,
-  border: "none",
-  backgroundColor: "#9E9E9E",
-  color: "white",
-  fontSize: 15,
-  cursor: "pointer"
+  width: "100%", padding: "12px", borderRadius: 10, border: "none",
+  backgroundColor: "#9E9E9E", color: "white", fontSize: 15, cursor: "pointer"
 };
 
 export default Result;

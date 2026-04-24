@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import Camera from "./components/Camera";
 import Result from "./components/Result";
 import History from "./components/History";
-import { analyzeFood } from "./services/geminiService";
-
+import { analyzeFood } from "./services/openaiService";
 const App = () => {
   const [view, setView] = useState("camera");
   const [preview, setPreview] = useState(null);
