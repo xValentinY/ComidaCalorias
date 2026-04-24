@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+//FotoCalorias
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación web que permite analizar alimentos a partir de una imagen y estimar sus calorías de forma rápida y sencilla.
 
-## Available Scripts
 
-In the project directory, you can run:
+//Para poder utilizarse con el celular favor de ingresar a este link
 
-### `npm start`
+https://comida-calorias-ui4i.vercel.app
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+-- ¿Cómo funciona?
 
-### `npm test`
+1. El usuario abre la app
+2. Puede:
+   - Tomar una foto desde la cámara  
+   - Subir una imagen
+3. La imagen se procesa en la app
+4. Se envía a un servicio de análisis (analyzeFood)
+5. Se obtiene una estimación de calorías
+6. El resultado se muestra en pantalla
+7. El usuario puede guardar el resultado en el historial
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-- Tecnologías utilizadas
 
-### `npm run build`
+- React (Create React App)
+- JavaScript
+- CSS (inline styles)
+- Vercel (deploy)
+- LocalStorage (para historial)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+-- Instalación local
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Sigue estos pasos para ejecutar el proyecto en tu computadora:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+-- Clonar el repositorio: 
 
-### `npm run eject`
+git clone https://github.com/xValentinY/ComidaCalorias.git  
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+-- Entrar al proyecto 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+cd ComidaCalorias  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+-- Instalar dependencias 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+npm install 
 
-## Learn More
+-- Ejecutar en modo desarrollo npm start 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+La app se abrirá en:
+http://localhost:3000
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+-- Uso en celular
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+No necesitas instalar nada  
+Solo abre el link en tu navegador:
 
-### Analyzing the Bundle Size
+https://comida-calorias-ui4i.vercel.app
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. Recomendado: usar Chrome o Safari  
+2. Permitir acceso a la cámara
 
-### Making a Progressive Web App
+-- Funcionalidades
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Captura de imagen desde cámara
+- Subida de imágenes
+- Análisis de alimentos
+- Visualización de resultados
+- Historial de consultas (máx. 15)
+- Eliminación de registros
 
-### Advanced Configuration
+-- Notas
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- La estimación de calorías es aproximada
+- Depende del servicio utilizado en analyzeFood
+- Se requiere conexión a internet
 
-### Deployment
+-- Autor
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Desarrollado por: Valentin Gamboa para cheek food
 
-### `npm run build` fails to minify
+-- Futuras mejoras
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Integración con IA real (visión)
+- Mejoras de UI/UX
+- Modo oscuro
+- Convertir a PWA (instalab
